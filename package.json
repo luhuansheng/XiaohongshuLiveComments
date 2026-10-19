@@ -56,7 +56,7 @@
   },
   "dependencies": {
     "@ikenxuan/xhshow-ts": "1.2.0",
-    "ws": "8.21.0"
+    "ws": "8.22.0"
   },
   "devDependencies": {
     "prettier": "3.9.10"
