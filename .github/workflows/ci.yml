@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offline:
+    name: Offline checks (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm run check
+      - run: npm run package:source
+
+  container:
+    name: Container build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - run: docker compose config --quiet
+      - run: docker build -t xhs-live-comments:ci .
+      - name: Empty-config startup smoke test
+        run: |
+          docker run -d --name collector-smoke -p 127.0.0.1:8789:8789 xhs-live-comments:ci
+          curl --fail --retry 10 --retry-connrefused --retry-delay 1 http://127.0.0.1:8789/health
+          curl --fail http://127.0.0.1:8789/v1/rooms | python3 -c "import json,sys; assert json.load(sys.stdin)['rooms'] == []"
+      - name: Stop smoke container
+        if: always()
+        run: docker rm -f collector-smoke

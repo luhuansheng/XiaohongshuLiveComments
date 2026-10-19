@@ -1,0 +1,64 @@
+{
+  "name": "xiaohongshu-live-comments",
+  "version": "0.1.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Independent guest-session WebSocket live comment collector",
+  "type": "commonjs",
+  "main": "src/index.cjs",
+  "keywords": [
+    "xiaohongshu",
+    "livestream",
+    "comments",
+    "websocket",
+    "guest"
+  ],
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "files": [
+    "src/",
+    "scripts/",
+    "tests/",
+    "docs/",
+    ".github/",
+    "config/*.example.json",
+    "Dockerfile",
+    "compose.yaml",
+    ".dockerignore",
+    ".gitignore",
+    ".gitattributes",
+    ".editorconfig",
+    ".prettierrc.json",
+    ".prettierignore",
+    ".nvmrc",
+    ".node-version",
+    "package-lock.json",
+    "README.md",
+    "LICENSE",
+    "THIRD_PARTY_NOTICES.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md",
+    "CHANGELOG.md"
+  ],
+  "scripts": {
+    "start": "node src/cli.cjs",
+    "config:init": "node scripts/init-config.cjs",
+    "check:syntax": "node scripts/check-syntax.cjs",
+    "format:check": "prettier --check .",
+    "format": "prettier --write .",
+    "lint": "npm run check:syntax && npm run format:check",
+    "check": "npm run lint && npm test",
+    "test": "node --test tests/*.test.cjs",
+    "test:live": "node scripts/supervise-test.cjs",
+    "export:comments": "node scripts/export-comments.cjs",
+    "package:source": "node scripts/package-source.cjs"
+  },
+  "dependencies": {
+    "@ikenxuan/xhshow-ts": "1.2.0",
+    "ws": "8.21.0"
+  },
+  "devDependencies": {
+    "prettier": "3.9.10"
+  }
+}

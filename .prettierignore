@@ -1,0 +1,11 @@
+node_modules/
+data/
+outputs/
+coverage/
+dist/
+artifacts/
+config/rooms.json
+config/settings.json
+package-lock.json
+LICENSE
+THIRD_PARTY_NOTICES.md

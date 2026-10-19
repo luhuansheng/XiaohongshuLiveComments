@@ -1,0 +1,14 @@
+node_modules
+data
+outputs
+.git
+.github
+config/rooms.json
+config/settings.json
+.env
+.env.*
+*.log
+*.tmp
+tests
+docs
+README.md

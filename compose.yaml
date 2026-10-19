@@ -1,0 +1,33 @@
+services:
+  collector:
+    build: .
+    init: true
+    restart: unless-stopped
+    ports:
+      - '127.0.0.1:${PORT:-8789}:8789'
+    environment:
+      HOST: '0.0.0.0'
+      PORT: '8789'
+      DATA_DIR: '/app/data'
+      OUTPUT_DIR: '/app/outputs'
+    volumes:
+      - collector_config:/app/config
+      - collector_data:/app/data
+      - collector_outputs:/app/outputs
+    healthcheck:
+      test:
+        [
+          'CMD',
+          'node',
+          '-e',
+          "fetch('http://127.0.0.1:8789/health').then(r => { if (!r.ok) process.exit(1) }).catch(() => process.exit(1))",
+        ]
+      interval: 30s
+      timeout: 5s
+      start_period: 10s
+      retries: 3
+
+volumes:
+  collector_config:
+  collector_data:
+  collector_outputs:
